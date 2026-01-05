@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Orders - E-commerce{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Your Orders</h2>
+{% if orders %}
+<div class="row">
+    {% for order in orders %}
+    <div class="col-md-12 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Order #{{ order.id }}</h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text"><strong>Total: ${{ order.total_price }}</strong></p>
+                <p class="card-text">Status: <span class="badge bg-secondary">{{ order.status }}</span></p>
+                <p class="card-text">Date: {{ order.created_at }}</p>
+                <h6>Items:</h6>
+                <ul class="list-group list-group-flush">
+                    {% for item in order.items %}
+                    <li class="list-group-item">{{ item.product.name }} - Quantity: {{ item.quantity }} - Price: ${{ item.price }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info" role="alert">
+    No orders yet.
+</div>
+{% endif %}
+{% endblock %}

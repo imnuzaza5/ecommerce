@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Admin - E-commerce{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Admin Panel</h2>
+<h3 class="mb-3">Add Product</h3>
+<form method="post" enctype="multipart/form-data" class="mb-5">
+    {{ form.hidden_tag() }}
+    <div class="mb-3">
+        {{ form.name.label(class="form-label") }}
+        {{ form.name(class="form-control") }}
+        {% for error in form.name.errors %}<div class="text-danger">{{ error }}</div>{% endfor %}
+    </div>
+    <div class="mb-3">
+        {{ form.description.label(class="form-label") }}
+        {{ form.description(class="form-control") }}
+        {% for error in form.description.errors %}<div class="text-danger">{{ error }}</div>{% endfor %}
+    </div>
+    <div class="mb-3">
+        {{ form.price.label(class="form-label") }}
+        {{ form.price(class="form-control") }}
+        {% for error in form.price.errors %}<div class="text-danger">{{ error }}</div>{% endfor %}
+    </div>
+    <div class="mb-3">
+        {{ form.stock.label(class="form-label") }}
+        {{ form.stock(class="form-control") }}
+        {% for error in form.stock.errors %}<div class="text-danger">{{ error }}</div>{% endfor %}
+    </div>
+    <div class="mb-3">
+        {{ form.image.label(class="form-label") }}
+        {{ form.image(class="form-control") }}
+        {% for error in form.image.errors %}<div class="text-danger">{{ error }}</div>{% endfor %}
+    </div>
+    <div class="d-grid">
+        {{ form.submit(class="btn btn-primary") }}
+    </div>
+</form>
+<h3 class="mb-3">Existing Products</h3>
+<div class="row">
+    {% for product in products %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p class="card-text">{{ product.description[:50] }}...</p>
+                <p class="card-text"><strong>Price: ${{ product.price }}</strong></p>
+                <p class="card-text">Stock: {{ product.stock }}</p>
+                <form method="post" action="{{ url_for('delete_product', product_id=product.id) }}" style="display:inline;">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

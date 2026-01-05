@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Product - E-commerce{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Edit Product</h2>
+{% if product.image_url %}
+<div class="mb-3">
+    <label class="form-label">Current Image:</label><br>
+    <img src="{{ url_for('static', filename='images/' + product.image_url) }}" alt="{{ product.name }}" style="max-width: 200px;">
+</div>
+{% endif %}
+<form method="post" enctype="multipart/form-data" class="mb-5">
+    {{ form.hidden_tag() }}
+    <div class="mb-3">
+        {{ form.name.label(class="form-label") }}
+        {{ form.name(class="form-control") }}
+        {% for error in form.name.errors %}<div class="text-danger">{{ error }}</div>{% endfor %}
+    </div>
+    <div class="mb-3">
+        {{ form.description.label(class="form-label") }}
+        {{ form.description(class="form-control") }}
+        {% for error in form.description.errors %}<div class="text-danger">{{ error }}</div>{% endfor %}
+    </div>
+    <div class="mb-3">
+        {{ form.price.label(class="form-label") }}
+        {{ form.price(class="form-control") }}
+        {% for error in form.price.errors %}<div class="text-danger">{{ error }}</div>{% endfor %}
+    </div>
+    <div class="mb-3">
+        {{ form.stock.label(class="form-label") }}
+        {{ form.stock(class="form-control") }}
+        {% for error in form.stock.errors %}<div class="text-danger">{{ error }}</div>{% endfor %}
+    </div>
+    <div class="mb-3">
+        {{ form.image.label(class="form-label") }}
+        {{ form.image(class="form-control") }}
+        {% for error in form.image.errors %}<div class="text-danger">{{ error }}</div>{% endfor %}
+    </div>
+    <div class="d-grid">
+        {{ form.submit(class="btn btn-primary") }}
+    </div>
+</form>
+<a href="{{ url_for('seller_products') }}" class="btn btn-secondary">Back to My Products</a>
+{% endblock %}

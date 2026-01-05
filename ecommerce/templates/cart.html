@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Cart - E-commerce{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Your Cart</h2>
+{% if cart_items %}
+<div class="row">
+    {% for item in cart_items %}
+    <div class="col-md-12 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h5 class="card-title">{{ item.product.name }}</h5>
+                        <p class="card-text">Price: ${{ item.product.price }}</p>
+                        <p class="card-text">Quantity: {{ item.quantity }}</p>
+                        <p class="card-text"><strong>Subtotal: ${{ item.product.price * item.quantity }}</strong></p>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-center">
+                        <a href="{{ url_for('remove_from_cart', cart_id=item.id) }}" class="btn btn-danger">Remove</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<div class="mt-4">
+    <h4>Total: ${{ total }}</h4>
+    <form action="{{ url_for('checkout') }}" method="post" class="d-inline">
+        <button type="submit" class="btn btn-success">Checkout</button>
+    </form>
+</div>
+{% else %}
+<div class="alert alert-info" role="alert">
+    Your cart is empty.
+</div>
+{% endif %}
+{% endblock %}

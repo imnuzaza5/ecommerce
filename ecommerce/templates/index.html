@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Home - E-commerce{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Products</h2>
+<div class="row" id="products-container">
+    <!-- Products will be loaded here -->
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const productsContainer = document.getElementById('products-container');
+
+function loadProducts() {
+    fetch('/api/products')
+        .then(response => response.json())
+        .then(products => {
+            productsContainer.innerHTML = products.map(product => `
+                <div class="col-md-4 mb-4" data-product-id="${product.id}">
+                    <div class="card h-100">
+                        ${product.image_url ? `<img src="${product.image_url}" class="card-img-top" alt="${product.name}">` : ''}
+                        <div class="card-body">
+                            <h5 class="card-title">${product.name}</h5>
+                            <p class="card-text">${product.description.substring(0, 100)}...</p>
+                            <p class="card-text"><strong>Price: $${product.price}</strong></p>
+                            <p class="card-text">Stock: ${product.stock}</p>
+                            <a href="/product/${product.id}" class="btn btn-primary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        });
+}
+
+loadProducts();  // Initial load
+
+// Real-time updates via SocketIO
+socket.on('product_created', function(product) {
+    const productHTML = `
+        <div class="col-md-4 mb-4" data-product-id="${product.id}">
+            <div class="card h-100">
+                ${product.image_url ? `<img src="${product.image_url}" class="card-img-top" alt="${product.name}">` : ''}
+                <div class="card-body">
+                    <h5 class="card-title">${product.name}</h5>
+                    <p class="card-text">${product.description.substring(0, 100)}...</p>
+                    <p class="card-text"><strong>Price: $${product.price}</strong></p>
+                    <p class="card-text">Stock: ${product.stock}</p>
+                    <a href="/product/${product.id}" class="btn btn-primary">View Details</a>
+                </div>
+            </div>
+        </div>
+    `;
+    productsContainer.insertAdjacentHTML('afterbegin', productHTML);
+});
+
+socket.on('product_deleted', function(data) {
+    const productElement = document.querySelector(`[data-product-id="${data.id}"]`);
+    if (productElement) {
+        productElement.remove();
+    }
+});
+</script>
+{% endblock %}
